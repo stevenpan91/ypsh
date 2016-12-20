@@ -487,6 +487,7 @@ thisdir=opendir(thedirectory);
 while((thefile=readdir(thisdir)) != NULL)
 	{
 	stat(thefile->d_name,&thestat);
+	//sprintf(tempstr,"%10s ", thestat.st_mode); 
         sprintf(tempstr,"%10d  ",thestat.st_size);
 	/*for(startspace=0;startspace<=formatspace-slen(tempstr);startspace++)
 		{
