@@ -1,0 +1,6 @@
+# depslib dependency file v1.0
+1481323060 source:/home/steven/Projects/ypsh/ypsh.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+

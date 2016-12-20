@@ -1,0 +1,13 @@
+startover
+aptest2
+aptest2
+aptest77
+appending now
+thereisworktomorrow
+monday tom
+append4
+append6
+append 7
+five
+seven
+The current working directory is: /home/steven/Projects/ypsh
