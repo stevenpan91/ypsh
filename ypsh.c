@@ -7,6 +7,7 @@
 #include<stdlib.h>
 #include<string.h>
 #include<dirent.h>
+#include<time.h>
 #include<pwd.h>
 #include<grp.h>
 #include<sys/stat.h>
@@ -492,8 +493,31 @@ while((thefile=readdir(thisdir)) != NULL)
 	{
 	stat(thefile->d_name,&thestat);
 	//sprintf(tempstr,"%10s ", thestat.st_mode); 
-	sprintf(tempstr,"%3d ", thestat.st_nlink);
-
+	strcpy(tempstr, (S_ISDIR(thestat.st_mode)) ? "d" : "-");
+        strcat(tempstr, (thestat.st_mode & S_IRUSR) ? "r" : "-");
+        strcat(tempstr, (thestat.st_mode & S_IWUSR) ? "w" : "-");
+        strcat(tempstr, (thestat.st_mode & S_IXUSR) ? "x" : "-");
+        strcat(tempstr, (thestat.st_mode & S_IRGRP) ? "r" : "-");
+        strcat(tempstr, (thestat.st_mode & S_IWGRP) ? "w" : "-");
+        strcat(tempstr, (thestat.st_mode & S_IXGRP) ? "x" : "-");
+        strcat(tempstr, (thestat.st_mode & S_IROTH) ? "r" : "-");
+        strcat(tempstr, (thestat.st_mode & S_IWOTH) ? "w" : "-");
+        strcat(tempstr, (thestat.st_mode & S_IXOTH) ? "x" : "-");
+	
+/*	printf( (S_ISDIR(thestat.st_mode)) ? "d" : "-");
+        printf( (thestat.st_mode & S_IRUSR) ? "r" : "-");
+        printf( (thestat.st_mode & S_IWUSR) ? "w" : "-");
+        printf( (thestat.st_mode & S_IXUSR) ? "x" : "-");
+        printf( (thestat.st_mode & S_IRGRP) ? "r" : "-");
+        printf( (thestat.st_mode & S_IWGRP) ? "w" : "-");
+        printf( (thestat.st_mode & S_IXGRP) ? "x" : "-");
+        printf( (thestat.st_mode & S_IROTH) ? "r" : "-");
+        printf( (thestat.st_mode & S_IWOTH) ? "w" : "-");
+        printf( (thestat.st_mode & S_IXOTH) ? "x" : "-");
+*/
+	sprintf(tempstr2,"%3d ", thestat.st_nlink);
+	memcpy(tempstr+slen(tempstr),tempstr2,slen(tempstr2)+1);
+	
 	
 	sprintf(tempstr2,"%20s", getpwuid(thestat.st_uid)->pw_name);
 	memcpy(tempstr+slen(tempstr),tempstr2,slen(tempstr2)+1);
@@ -520,7 +544,7 @@ while((thefile=readdir(thisdir)) != NULL)
 		memcpy(tempstr+slen(tempstr)," ",slen(" ")+1);
 	
 		}*/
-	sprintf(tempstr2, "%30s",thefile->d_name);
+	sprintf(tempstr2, "%20s",thefile->d_name);
 	memcpy(tempstr+slen(tempstr),tempstr2,slen(tempstr2)+1);
 	
 	uboundprntbuf++;
