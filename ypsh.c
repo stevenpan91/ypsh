@@ -7,6 +7,8 @@
 #include<stdlib.h>
 #include<string.h>
 #include<dirent.h>
+#include<pwd.h>
+#include<grp.h>
 #include<sys/stat.h>
 #include<sys/types.h>
 #include<unistd.h>
@@ -480,6 +482,8 @@ struct dirent *thefile;
 struct stat thestat;
 
 char* tempstr=malloc(sizeof(char)*STD_STR_BUFFER*4);
+char* tempstr2=malloc(sizeof(char)*STD_STR_BUFFER);
+char date[16];
 int formatspace=15;
 int startspace;
 
@@ -488,13 +492,36 @@ while((thefile=readdir(thisdir)) != NULL)
 	{
 	stat(thefile->d_name,&thestat);
 	//sprintf(tempstr,"%10s ", thestat.st_mode); 
-        sprintf(tempstr,"%10d  ",thestat.st_size);
+	sprintf(tempstr,"%3d ", thestat.st_nlink);
+
+	
+	sprintf(tempstr2,"%20s", getpwuid(thestat.st_uid)->pw_name);
+	memcpy(tempstr+slen(tempstr),tempstr2,slen(tempstr2)+1);
+
+	sprintf(tempstr2, "%15s", getgrgid(thestat.st_gid)->gr_name);
+	memcpy(tempstr+slen(tempstr),tempstr2,slen(tempstr2)+1);
+	
+
+	/*sprintf(tempstr2,"%10d ",thestat.st_uid);
+	memcpy(tempstr+slen(tempstr),tempstr2,slen(tempstr2)+1);
+
+	sprintf(tempstr2,"%10d ",thestat.st_gid);
+	memcpy(tempstr+slen(tempstr),tempstr2,slen(tempstr2)+1);
+        */
+
+	sprintf(tempstr2,"%10d  ",thestat.st_size);	
+	memcpy(tempstr+slen(tempstr),tempstr2,slen(tempstr2)+1);
+
+	strftime(date,16,"%d-%b-%y %H:%M",localtime(&(thestat.st_mtime)));
+	sprintf(tempstr2,"%16s ",date);
+	memcpy(tempstr+slen(tempstr),tempstr2,slen(tempstr2)+1);
 	/*for(startspace=0;startspace<=formatspace-slen(tempstr);startspace++)
 		{
 		memcpy(tempstr+slen(tempstr)," ",slen(" ")+1);
 	
 		}*/
-	memcpy(tempstr+slen(tempstr),thefile->d_name,slen(thefile->d_name)+1);
+	sprintf(tempstr2, "%30s",thefile->d_name);
+	memcpy(tempstr+slen(tempstr),tempstr2,slen(tempstr2)+1);
 	
 	uboundprntbuf++;
 	strcpy(prbfub,tempstr);
@@ -504,6 +531,7 @@ while((thefile=readdir(thisdir)) != NULL)
 
 closedir(thisdir);
 free(tempstr);
+free(tempstr2);
 
 return 1;
 }
