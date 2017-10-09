@@ -238,7 +238,6 @@ char* dlinterp(char *line)
     delimiters[1]='|';
     delimiters[2]='>';
 
-    //used in for loop to check delimiters
     int checkdl;
 
     char* returnline=malloc(sizeof(char)*STD_STR_BUFFER*4);
@@ -252,8 +251,8 @@ char* dlinterp(char *line)
 
     while(*line != '\0')
     {
-        //set skip chars as false first
-        skip=false;
+    //set skip chars as false first
+    skip=false;
 
         //for (checkdl=0; checkdl<dlamount; checkdl++)
         //    {
@@ -285,8 +284,8 @@ char* dlinterp(char *line)
 
             //Only add if skip is false
             if(skip==false){
-                returnline[charpos]=*line;
-                charpos++;
+            returnline[charpos]=*line;
+            charpos++;
             }
 
         //Move to next char in line
@@ -311,10 +310,8 @@ char* read_line(void)
 	inputline=malloc(sizeof(char)*100);
 	//scanf("%99[^\n]",inputline);
 
-    //get input from user
-	fgets(inputline,MAX_STR_SIZE,stdin);
 
-    //switch out line return with null at end of string
+	fgets(inputline,MAX_STR_SIZE,stdin);
 	if ((strlen(inputline)>0) && (inputline[strlen (inputline) - 1] == '\n'))
         inputline[strlen (inputline) - 1] = '\0';
 
@@ -324,19 +321,17 @@ char* read_line(void)
 
 char** read_args(char* line)
 {
-    argamounts=0;
-    //tokens and strtok was taken from tutorialspoint regarding the strtok function
+argamounts=0;
+//tokens and strtok was taken from tutorialspoint regarding the strtok function
     char** returnargs;
 
     char* dlcheckline;
     if(line[0]!='\0'){
-        //printf("The line is %s.\n",line);
-        //below returns line without spaces between words and delimiters
-        //For instance 'ls | grep' would be 'ls|grep'. This is a temporary measure
-        dlcheckline=dlinterp(line);}
+    //printf("The line is %s.\n",line);
+    dlcheckline=dlinterp(line);}
     else{
-        //printf("Line is null.");
-        dlcheckline=line;
+    //printf("Line is null.");
+    dlcheckline=line;
     }
 
     returnargs=parsecmd(dlcheckline);
@@ -483,101 +478,101 @@ return 0;
 }
 
 int ypsh_ls(char **args){
-    DIR *thisdir;
-    struct dirent *thefile;
-    struct stat thestat;
+DIR *thisdir;
+struct dirent *thefile;
+struct stat thestat;
 
-    char* tempstr=malloc(sizeof(char)*STD_STR_BUFFER*4);
-    char* tempstr2=malloc(sizeof(char)*STD_STR_BUFFER);
-    char date[16];
-    int formatspace=15;
-    int startspace;
+char* tempstr=malloc(sizeof(char)*STD_STR_BUFFER*4);
+char* tempstr2=malloc(sizeof(char)*STD_STR_BUFFER);
+char date[16];
+int formatspace=15;
+int startspace;
 
-    thisdir=opendir(thedirectory);
-    while((thefile=readdir(thisdir)) != NULL)
-        {
-        stat(thefile->d_name,&thestat);
-        //sprintf(tempstr,"%10s ", thestat.st_mode); 
-        strcpy(tempstr, (S_ISDIR(thestat.st_mode)) ? "d" : "-");
-            strcat(tempstr, (thestat.st_mode & S_IRUSR) ? "r" : "-");
-            strcat(tempstr, (thestat.st_mode & S_IWUSR) ? "w" : "-");
-            strcat(tempstr, (thestat.st_mode & S_IXUSR) ? "x" : "-");
-            strcat(tempstr, (thestat.st_mode & S_IRGRP) ? "r" : "-");
-            strcat(tempstr, (thestat.st_mode & S_IWGRP) ? "w" : "-");
-            strcat(tempstr, (thestat.st_mode & S_IXGRP) ? "x" : "-");
-            strcat(tempstr, (thestat.st_mode & S_IROTH) ? "r" : "-");
-            strcat(tempstr, (thestat.st_mode & S_IWOTH) ? "w" : "-");
-            strcat(tempstr, (thestat.st_mode & S_IXOTH) ? "x" : "-");
-        
-    /*	printf( (S_ISDIR(thestat.st_mode)) ? "d" : "-");
-            printf( (thestat.st_mode & S_IRUSR) ? "r" : "-");
-            printf( (thestat.st_mode & S_IWUSR) ? "w" : "-");
-            printf( (thestat.st_mode & S_IXUSR) ? "x" : "-");
-            printf( (thestat.st_mode & S_IRGRP) ? "r" : "-");
-            printf( (thestat.st_mode & S_IWGRP) ? "w" : "-");
-            printf( (thestat.st_mode & S_IXGRP) ? "x" : "-");
-            printf( (thestat.st_mode & S_IROTH) ? "r" : "-");
-            printf( (thestat.st_mode & S_IWOTH) ? "w" : "-");
-            printf( (thestat.st_mode & S_IXOTH) ? "x" : "-");
-    */
-        sprintf(tempstr2,"%3d ", thestat.st_nlink);
-        memcpy(tempstr+slen(tempstr),tempstr2,slen(tempstr2)+1);
-        
-        
-        sprintf(tempstr2,"%20s", getpwuid(thestat.st_uid)->pw_name);
-        memcpy(tempstr+slen(tempstr),tempstr2,slen(tempstr2)+1);
+thisdir=opendir(thedirectory);
+while((thefile=readdir(thisdir)) != NULL)
+	{
+	stat(thefile->d_name,&thestat);
+	//sprintf(tempstr,"%10s ", thestat.st_mode); 
+	strcpy(tempstr, (S_ISDIR(thestat.st_mode)) ? "d" : "-");
+        strcat(tempstr, (thestat.st_mode & S_IRUSR) ? "r" : "-");
+        strcat(tempstr, (thestat.st_mode & S_IWUSR) ? "w" : "-");
+        strcat(tempstr, (thestat.st_mode & S_IXUSR) ? "x" : "-");
+        strcat(tempstr, (thestat.st_mode & S_IRGRP) ? "r" : "-");
+        strcat(tempstr, (thestat.st_mode & S_IWGRP) ? "w" : "-");
+        strcat(tempstr, (thestat.st_mode & S_IXGRP) ? "x" : "-");
+        strcat(tempstr, (thestat.st_mode & S_IROTH) ? "r" : "-");
+        strcat(tempstr, (thestat.st_mode & S_IWOTH) ? "w" : "-");
+        strcat(tempstr, (thestat.st_mode & S_IXOTH) ? "x" : "-");
+	
+/*	printf( (S_ISDIR(thestat.st_mode)) ? "d" : "-");
+        printf( (thestat.st_mode & S_IRUSR) ? "r" : "-");
+        printf( (thestat.st_mode & S_IWUSR) ? "w" : "-");
+        printf( (thestat.st_mode & S_IXUSR) ? "x" : "-");
+        printf( (thestat.st_mode & S_IRGRP) ? "r" : "-");
+        printf( (thestat.st_mode & S_IWGRP) ? "w" : "-");
+        printf( (thestat.st_mode & S_IXGRP) ? "x" : "-");
+        printf( (thestat.st_mode & S_IROTH) ? "r" : "-");
+        printf( (thestat.st_mode & S_IWOTH) ? "w" : "-");
+        printf( (thestat.st_mode & S_IXOTH) ? "x" : "-");
+*/
+	sprintf(tempstr2,"%3d ", thestat.st_nlink);
+	memcpy(tempstr+slen(tempstr),tempstr2,slen(tempstr2)+1);
+	
+	
+	sprintf(tempstr2,"%20s", getpwuid(thestat.st_uid)->pw_name);
+	memcpy(tempstr+slen(tempstr),tempstr2,slen(tempstr2)+1);
 
-        sprintf(tempstr2, "%15s", getgrgid(thestat.st_gid)->gr_name);
-        memcpy(tempstr+slen(tempstr),tempstr2,slen(tempstr2)+1);
-        
+	sprintf(tempstr2, "%15s", getgrgid(thestat.st_gid)->gr_name);
+	memcpy(tempstr+slen(tempstr),tempstr2,slen(tempstr2)+1);
+	
 
-        /*sprintf(tempstr2,"%10d ",thestat.st_uid);
-        memcpy(tempstr+slen(tempstr),tempstr2,slen(tempstr2)+1);
+	/*sprintf(tempstr2,"%10d ",thestat.st_uid);
+	memcpy(tempstr+slen(tempstr),tempstr2,slen(tempstr2)+1);
 
-        sprintf(tempstr2,"%10d ",thestat.st_gid);
-        memcpy(tempstr+slen(tempstr),tempstr2,slen(tempstr2)+1);
-            */
+	sprintf(tempstr2,"%10d ",thestat.st_gid);
+	memcpy(tempstr+slen(tempstr),tempstr2,slen(tempstr2)+1);
+        */
 
-        sprintf(tempstr2,"%10d  ",thestat.st_size);	
-        memcpy(tempstr+slen(tempstr),tempstr2,slen(tempstr2)+1);
+	sprintf(tempstr2,"%10d  ",thestat.st_size);	
+	memcpy(tempstr+slen(tempstr),tempstr2,slen(tempstr2)+1);
 
-        strftime(date,16,"%d-%b-%y %H:%M",localtime(&(thestat.st_mtime)));
-        sprintf(tempstr2,"%16s ",date);
-        memcpy(tempstr+slen(tempstr),tempstr2,slen(tempstr2)+1);
-        /*for(startspace=0;startspace<=formatspace-slen(tempstr);startspace++)
-            {
-            memcpy(tempstr+slen(tempstr)," ",slen(" ")+1);
-        
-            }*/
-        sprintf(tempstr2, "%20s",thefile->d_name);
-        memcpy(tempstr+slen(tempstr),tempstr2,slen(tempstr2)+1);
-        
-        uboundprntbuf++;
-        strcpy(prbfub,tempstr);
-        
-        
-        }
+	strftime(date,16,"%d-%b-%y %H:%M",localtime(&(thestat.st_mtime)));
+	sprintf(tempstr2,"%16s ",date);
+	memcpy(tempstr+slen(tempstr),tempstr2,slen(tempstr2)+1);
+	/*for(startspace=0;startspace<=formatspace-slen(tempstr);startspace++)
+		{
+		memcpy(tempstr+slen(tempstr)," ",slen(" ")+1);
+	
+		}*/
+	sprintf(tempstr2, "%20s",thefile->d_name);
+	memcpy(tempstr+slen(tempstr),tempstr2,slen(tempstr2)+1);
+	
+	uboundprntbuf++;
+	strcpy(prbfub,tempstr);
+	
+	
+	}
 
-    closedir(thisdir);
-    free(tempstr);
-    free(tempstr2);
+closedir(thisdir);
+free(tempstr);
+free(tempstr2);
 
-    return 1;
+return 1;
 }
 
 
 int ypsh_echo(char** args){
 
-    char *strbuffer=calloc(STD_STR_BUFFER,sizeof(char));
+char *strbuffer=calloc(STD_STR_BUFFER,sizeof(char));
 
-    int checkargs;
+int checkargs;
 
-    strcpy(strbuffer,args[0]);
-    uboundprntbuf++;
-    strcpy(prbfub,strbuffer+5);
-    free(strbuffer);
+strcpy(strbuffer,args[0]);
+uboundprntbuf++;
+strcpy(prbfub,strbuffer+5);
+free(strbuffer);
 
-    return 1;
+return 1;
 }
 
 int getdirectory(char** args){
@@ -935,63 +930,63 @@ void ypsh_loop(void)
 
 
 	do {
-        printf("ypsh %s> ",thedirectory);
-        line = read_line();
-        args=read_args(line);
+	printf("ypsh %s> ",thedirectory);
+	line = read_line();
+	args=read_args(line);
 
-        if (argamounts>0){
-            status=shexecute(args);}
-        else{
-            status=1;}
+	if (argamounts>0){
+	status=shexecute(args);}
+	else{
+	status=1;}
 
-        //print out the print buffer after execution if redirect and append flags are false
-        if (uboundprntbuf>=0 ){
-            if(redirectflag==false && appendflag==false){
-                for(printoutindx=0;printoutindx<=uboundprntbuf;printoutindx++)
-                    {printf("%s\n",printbuffer[printoutindx]);
-                    //	printf("test loc of print\n");
-                    }
-            }
-            else if(redirectflag==true){
-                redirectflag=false;
-                fp1 = fopen(redirfilepath,"w");
-                printf("write type redirfilepath is %s",redirfilepath);
+    //print out the print buffer after execution if redirect and append flags are false
+    if (uboundprntbuf>=0 ){
+        if(redirectflag==false && appendflag==false){
+            for(printoutindx=0;printoutindx<=uboundprntbuf;printoutindx++)
+                {printf("%s\n",printbuffer[printoutindx]);
+	//	printf("test loc of print\n");
+		}
+	}
+        else if(redirectflag==true){
+	    redirectflag=false;
+            fp1 = fopen(redirfilepath,"w");
+	    printf("write type redirfilepath is %s",redirfilepath);
 
-                for(printoutindx=0;printoutindx<=uboundprntbuf;printoutindx++)
-                    fprintf(fp1,"%s\n",printbuffer[printoutindx]);
-                    //fprintf(fp1,"%s\n",printbuffer[0]);
-        
+            for(printoutindx=0;printoutindx<=uboundprntbuf;printoutindx++)
+                fprintf(fp1,"%s\n",printbuffer[printoutindx]);
+                //fprintf(fp1,"%s\n",printbuffer[0]);
+	
 
-                fclose(fp1); //close pointer
-            }
-            else if(appendflag==true){
-                appendflag=false;
-                fp1 = fopen(redirfilepath,"a");
-                printf("append type redirfilepath is %s\n",redirfilepath);
-                printf("uboundprntbuf is %d\n",uboundprntbuf);
-                printf("printbuffer[0] is %s\n",printbuffer[0]);
-                printf("printbuffer[1] is %s\n", printbuffer[1]);
-
-                    for(printoutindx=0;printoutindx<=uboundprntbuf;printoutindx++)
-                        fprintf(fp1,"%s\n",printbuffer[printoutindx]);
-                        //fprintf(fp1,"%s\n",printbuffer[0]);
-            
-
-                    fclose(fp1); //close pointer
-            
-            }
-            //free print buffer
-            int freeprbuf;
-
-            //printbuffer=calloc(PRNT_BUFFER,sizeof(char*));
-            for(freeprbuf=0; freeprbuf<PRNT_BUFFER;freeprbuf++){
-                   memset(printbuffer[freeprbuf],0,STD_STR_BUFFER*4);
-            }
-
-            uboundprntbuf=-1;
-            //memset(printbuffer,0,PRNT_BUFFER);
-
+            fclose(fp1); //close pointer
         }
+	else if(appendflag==true){
+            appendflag=false;
+	    fp1 = fopen(redirfilepath,"a");
+	    printf("append type redirfilepath is %s\n",redirfilepath);
+            printf("uboundprntbuf is %d\n",uboundprntbuf);
+	    printf("printbuffer[0] is %s\n",printbuffer[0]);
+	    printf("printbuffer[1] is %s\n", printbuffer[1]);
+
+            for(printoutindx=0;printoutindx<=uboundprntbuf;printoutindx++)
+                fprintf(fp1,"%s\n",printbuffer[printoutindx]);
+                //fprintf(fp1,"%s\n",printbuffer[0]);
+	
+
+            fclose(fp1); //close pointer
+	
+	}
+        //free print buffer
+        int freeprbuf;
+
+	//printbuffer=calloc(PRNT_BUFFER,sizeof(char*));
+        for(freeprbuf=0; freeprbuf<PRNT_BUFFER;freeprbuf++){
+               memset(printbuffer[freeprbuf],0,STD_STR_BUFFER*4);
+		}
+
+	uboundprntbuf=-1;
+        //memset(printbuffer,0,PRNT_BUFFER);
+
+    }
 
         free(line);
         printf("amount of args %i\n",argamounts);
