@@ -68,6 +68,7 @@ void ypsh_loop(void);
 char * read_line(void);
 char ** read_args(char* line);
 
+//get string length
 int slen(char *thestring)
 {
     int charcount=0;
@@ -80,6 +81,19 @@ int slen(char *thestring)
 
     return charcount;
 
+}
+
+//check if string equal
+bool sequal(char* str1, char* str2){
+    if(slen(str1)!=slen(str2))
+        return false;
+
+    for(int i=0;i<slen(str1);i++)
+    {
+        if(str1[i]!=str2[i])
+            return false;
+    }
+    return true;
 }
 
 char **parsecmd(char *fullline)
@@ -603,16 +617,24 @@ int change_directory(char** args){
 	
     //don't copy the command cd
     strcpy(strbackup,firstline+3);
-    
-    if(chdir(strbackup)==0){
-	strcpy(thedirectory,strbackup);
-	}
+    if(sequal("..",firstline+3)){
+
+    }
     else{
-	perror("Invalid directory");
-	}
+        //if(chdir(strbackup)==0){
+        DIR* dir=opendir(strbackup);
+        if(dir){
+            strcpy(thedirectory,strbackup);
+        }
+        else{
+            perror("Invalid directory");
+        }
+    }
 
     return 1;
 }
+
+
 
 
 //-------------------------------------------------------------------------------------------
