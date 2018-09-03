@@ -83,6 +83,28 @@ int slen(char *thestring)
 
 }
 
+//get sub string
+char* substring(char *thestring, int pos)
+{
+    printf("string passed to function substring is %s\n",thestring);
+
+    char *str2 = malloc(pos + 1 + 1 ); /* plus one for actual length, one for trailing zero */
+    
+    int charcount=0;
+    while (charcount<pos)
+    {
+        str2[charcount]=thestring[charcount];
+        charcount++;
+    }
+
+    str2[charcount + 1] = '\0';
+
+    printf("copied string is %s\n",str2);
+
+    return str2;
+
+}
+
 //check if string equal
 bool sequal(char* str1, char* str2){
     if(slen(str1)!=slen(str2))
@@ -609,6 +631,45 @@ int getdirectory(char** args){
 }
 
 
+
+//get parent directory
+char* get_parent(char *thestring)
+{
+    printf("string is %s\n",thestring);
+    printf("string length is %d\n",slen(thestring));
+    
+    //get position of last front slash
+    //In order to move backward must first iterate pointer to end
+    int pos_count=0;
+    while (*thestring !='\0')
+    {
+        thestring++;
+        pos_count++;
+    }
+
+    //then decrement toward desired place
+    while (*thestring !='/')
+    {
+        pos_count--;
+        thestring--;
+    }
+
+    //save the position
+    int the_pos=pos_count;
+
+    printf("parent dir is at pos %d\n",pos_count);
+
+    //before passing need to decrement back to pos_count=0
+
+    while(pos_count>0){
+        pos_count--;
+        thestring--;
+    }
+
+    return substring(thestring,the_pos);
+
+}
+
 int change_directory(char** args){
     char* firstline;
     firstline=args[0];
@@ -616,11 +677,13 @@ int change_directory(char** args){
     char strbackup[STD_STR_BUFFER];
 	
     //don't copy the command cd
-    strcpy(strbackup,firstline+3);
+    
     if(sequal("..",firstline+3)){
-
+        strcpy(strbackup,get_parent(thedirectory));
     }
     else{
+        strcpy(strbackup,firstline+3);
+
         //if(chdir(strbackup)==0){
         DIR* dir=opendir(strbackup);
         if(dir){
