@@ -79,7 +79,14 @@ int slen(char *thestring)
 
     }
 
-    return charcount;
+    int finalcount=charcount;
+
+    while(charcount>0){
+        charcount--;
+        thestring--;
+    }
+
+    return finalcount;
 
 }
 
@@ -88,7 +95,7 @@ char* substring(char *thestring, int pos)
 {
     printf("string passed to function substring is %s\n",thestring);
 
-    char *str2 = malloc(pos + 1 + 1 ); /* plus one for actual length, one for trailing zero */
+    char *str2 = malloc(pos + 1 ); /* plus one for actual length, one for trailing zero */
     
     int charcount=0;
     while (charcount<pos)
@@ -116,6 +123,19 @@ bool sequal(char* str1, char* str2){
             return false;
     }
     return true;
+}
+
+char* sconcat(char* str1, char* str2){
+    char* ret_str=malloc(slen(str1)+slen(str2)+1);//length of two strings end char
+    for(int i=0; i<slen(str1)+slen(str2);i++){
+        if(i<slen(str1))
+            ret_str[i]=str1[i];
+        else
+            ret_str[i]=str2[i-slen(str1)];
+    }
+    ret_str[slen(str1)+slen(str2)]='\0';
+    printf("combined string is %s\n",ret_str);
+    return ret_str;
 }
 
 char **parsecmd(char *fullline)
@@ -636,7 +656,7 @@ int getdirectory(char** args){
 char* get_parent(char *thestring)
 {
     printf("string is %s\n",thestring);
-    printf("string length is %d\n",slen(thestring));
+    //printf("string length is %d\n",slen(thestring));
     
     //get position of last front slash
     //In order to move backward must first iterate pointer to end
@@ -679,19 +699,29 @@ int change_directory(char** args){
     //don't copy the command cd
     
     if(sequal("..",firstline+3)){
-        strcpy(strbackup,get_parent(thedirectory));
+        char* the_substring=get_parent(thedirectory);
+        strcpy(strbackup,the_substring);
+        free (the_substring);
+    }
+    else if(firstline[3]!='/'){
+        char* combined_string1=sconcat(thedirectory,"/");
+        char* combined_string2=sconcat(combined_string1,firstline+3);
+        strcpy(strbackup,combined_string2);
+        free(combined_string1);
+        free(combined_string2);
+    }
+    else
+    {
+        strcpy(strbackup,firstline+3);
+    }
+
+    //if(chdir(strbackup)==0){
+    DIR* dir=opendir(strbackup);
+    if(dir){
+        strcpy(thedirectory,strbackup);
     }
     else{
-        strcpy(strbackup,firstline+3);
-
-        //if(chdir(strbackup)==0){
-        DIR* dir=opendir(strbackup);
-        if(dir){
-            strcpy(thedirectory,strbackup);
-        }
-        else{
-            perror("Invalid directory");
-        }
+        perror("Invalid directory");
     }
 
     return 1;
