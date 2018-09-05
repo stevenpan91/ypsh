@@ -95,7 +95,9 @@ char* substring(char *thestring, int pos)
 {
     printf("string passed to function substring is %s\n",thestring);
 
-    char *str2 = malloc(pos + 1 ); /* plus one for actual length, one for trailing zero */
+    //theoretically pos+1 should be sufficient because the actual char at pos is not added
+    //but for some reason there is not enough memory unless I add one more. To check later
+    char *str2 = calloc(pos + 1 + 1,sizeof(char) ); /* plus one for actual length, one for trailing zero */
     
     int charcount=0;
     while (charcount<pos)
@@ -126,7 +128,7 @@ bool sequal(char* str1, char* str2){
 }
 
 char* sconcat(char* str1, char* str2){
-    char* ret_str=malloc(slen(str1)+slen(str2)+1);//length of two strings end char
+    char* ret_str=malloc(sizeof(char)*(slen(str1)+slen(str2)+1));//length of two strings end char
     for(int i=0; i<slen(str1)+slen(str2);i++){
         if(i<slen(str1))
             ret_str[i]=str1[i];
@@ -544,7 +546,7 @@ int ypsh_ls(char **args){
     struct stat thestat;
 
     char* tempstr=malloc(sizeof(char)*STD_STR_BUFFER*4);
-    char* tempstr2=malloc(sizeof(char)*STD_STR_BUFFER);
+    char* tempstr2=malloc(sizeof(char)*STD_STR_BUFFER*2);//memory wasn't enough. added "*2"
     char date[16];
     int formatspace=15;
     int startspace;
